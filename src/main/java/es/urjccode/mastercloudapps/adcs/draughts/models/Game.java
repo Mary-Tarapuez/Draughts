@@ -62,29 +62,29 @@ public class Game {
     }
 
     private boolean verifyCanEatPieces(Coordinate... coordinates){
-        boolean state = false;
         int row = 2;
-        if(this.turn.getColor().equals(Color.WHITE)) {
-            row = row * -1;
-        }
-        Coordinate origin = coordinates[0];
-        int rowTarget = origin.getRow() + row;
         int column = 2;
-        for (int i = 0; i < 2; i++ ) {
+        Coordinate origin = coordinates[0];
+        for (int i = 1; i <= 4; i++ ) {
+            int rowTarget = origin.getRow() + row;
             int colTarget = origin.getColumn() + column;
             if ( rowTarget <= 7 && colTarget >= 0) {
                 coordinates[1] = new Coordinate(rowTarget, colTarget);
                 Coordinate betweenPiece  = this.getBetweenDiagonalPiece(0, coordinates);
                 if (betweenPiece  != null ) {
                     if(this.turn.getColor() != this.board.getColor(betweenPiece) ) {
-                        state = true;
-                        break;
+                       return true;
                     }
                 }
             }
-            column = column * -1;
+            if(i == 2){
+                row = row * -1;
+                column = 2;
+            }else{
+                column = column * -1;
+            }
         }
-        return state;
+        return false;
     }
 
 	private Error isCorrectPairMove(int pair, Coordinate... coordinates) {
