@@ -33,8 +33,8 @@ public class Game {
 	}
 
 	public Error move(Coordinate... coordinates) {
-		Error error = null;
-		List<Coordinate> removedCoordinates = new ArrayList<Coordinate>();
+		Error error;
+		List<Coordinate> removedCoordinates = new ArrayList<>();
 		int pair = 0;
 		do {
 			error = this.isCorrectPairMove(pair, coordinates);
@@ -80,14 +80,13 @@ public class Game {
         return coordinatesToRemove;
     }
 
-
     private boolean isPossibleToEatPieces(Coordinate coordinate){
         int row = 2;
         int column = 2;
         for (int i = 1; i <= 4; i++ ) {
             int rowTarget = coordinate.getRow() + row;
             int colTarget = coordinate.getColumn() + column;
-            if ( rowTarget <= 7 && colTarget >= 0) {
+            if ( (rowTarget>= 0 && rowTarget <= 7) && (colTarget >= 0 && colTarget <= 7)) {
                 Coordinate coordinateDestination = new Coordinate(rowTarget, colTarget);
                 Coordinate betweenPiece  = this.getBetweenDiagonalPiece(0, new Coordinate[]{coordinate, coordinateDestination});
                 if (betweenPiece  != null ) {
