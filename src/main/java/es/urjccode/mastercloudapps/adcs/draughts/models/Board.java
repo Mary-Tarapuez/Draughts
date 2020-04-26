@@ -37,23 +37,13 @@ class Board {
     }
 
     List<Piece> getBetweenDiagonalPieces(Coordinate origin, Coordinate target) {
-        List<Piece> betweenDiagonalPieces = new ArrayList<Piece>();
+        List<Piece> betweenDiagonalPieces = new ArrayList<>();
         if (origin.isOnDiagonal(target))
             for (Coordinate coordinate : origin.getBetweenDiagonalCoordinates(target)) {
                 Piece piece = this.getPiece(coordinate);
                 if (piece != null)
                     betweenDiagonalPieces.add(piece);
             }
-        return betweenDiagonalPieces;
-    }
-
-    int getAmountBetweenDiagonalPieces(Coordinate origin, Coordinate target) {
-        if (!origin.isOnDiagonal(target))
-            return 0;
-        int betweenDiagonalPieces = 0;
-        for (Coordinate coordinate : origin.getBetweenDiagonalCoordinates(target))
-            if (this.getPiece(coordinate) != null)
-                betweenDiagonalPieces++;
         return betweenDiagonalPieces;
     }
 
