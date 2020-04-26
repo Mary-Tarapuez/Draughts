@@ -12,7 +12,7 @@ public class RemoveRandomPieceForNotEatingOpponentPieceTest extends GameTest {
         assertEquals(this.game, this.expectedGame);
     }
     @Test
-    public void testRemoveWhitePieceWhenNotEatingHavingOpportunity(){
+    public void testRemoveActualPieceWhenNotEatHavingOpportunity(){
         this.setGame(Color.WHITE,
             "        ",
             "        ",
