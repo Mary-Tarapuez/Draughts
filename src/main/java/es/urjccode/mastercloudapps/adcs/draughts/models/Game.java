@@ -54,23 +54,42 @@ public class Game {
 		return error;
 	}
 
-    private void removePieceWhenNotEatingHavingOpportunity( Coordinate... coordinates){
-        Coordinate target = coordinates[coordinates.length - 1];
-        if(verifyCanEatPieces(coordinates)){
-            this.board.remove(target);
+    private void removePieceWhenNotEatingHavingOpportunity(Coordinate... coordinates){
+        Coordinate targetPiece = coordinates[coordinates.length - 1];
+        if(isPossibleToEatPieces(coordinates[0])){
+            this.board.remove(targetPiece);
+        }
+        removePieceWhenNotEatingHavingOpportunityOtherPiece();
+    }
+
+    private void removePieceWhenNotEatingHavingOpportunityOtherPiece(){
+        List<Coordinate> coordinatesToRemove;
+        coordinatesToRemove = this.verifyPiecesToRemove();
+        if(!coordinatesToRemove.isEmpty()) {
+            this.board.remove(coordinatesToRemove.get((int) Math.random() * coordinatesToRemove.size()));
         }
     }
 
-    private boolean verifyCanEatPieces(Coordinate... coordinates){
+    private List<Coordinate> verifyPiecesToRemove(){
+        List<Coordinate> coordinatesToRemove = new ArrayList<>();
+        List<Coordinate> colorCoordinates = this.getCoordinatesWithActualColor();
+        for(Coordinate coordinate: colorCoordinates ){
+            if(this.isPossibleToEatPieces(coordinate))
+                coordinatesToRemove.add(coordinate);
+        }
+        return coordinatesToRemove;
+    }
+
+
+    private boolean isPossibleToEatPieces(Coordinate coordinate){
         int row = 2;
         int column = 2;
-        Coordinate origin = coordinates[0];
         for (int i = 1; i <= 4; i++ ) {
-            int rowTarget = origin.getRow() + row;
-            int colTarget = origin.getColumn() + column;
+            int rowTarget = coordinate.getRow() + row;
+            int colTarget = coordinate.getColumn() + column;
             if ( rowTarget <= 7 && colTarget >= 0) {
-                coordinates[1] = new Coordinate(rowTarget, colTarget);
-                Coordinate betweenPiece  = this.getBetweenDiagonalPiece(0, coordinates);
+                Coordinate coordinateDestination = new Coordinate(rowTarget, colTarget);
+                Coordinate betweenPiece  = this.getBetweenDiagonalPiece(0, new Coordinate[]{coordinate, coordinateDestination});
                 if (betweenPiece  != null ) {
                     if(this.turn.getColor() != this.board.getColor(betweenPiece) ) {
                        return true;
