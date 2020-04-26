@@ -45,11 +45,47 @@ public class Game {
 		} while (pair < coordinates.length - 1 && error == null);
 		error = this.isCorrectGlobalMove(error, removedCoordinates, coordinates);
 		if (error == null)
-			this.turn.change();
+        {
+           removePieceWhenNotEatingHavingOpportunity(coordinates);
+            this.turn.change();
+        }
 		else
 			this.unMovesUntilPair(removedCoordinates, pair, coordinates);
 		return error;
 	}
+
+    private void removePieceWhenNotEatingHavingOpportunity( Coordinate... coordinates){
+        Coordinate target = coordinates[coordinates.length - 1];
+        if(verifyCanEatPieces(coordinates)){
+            this.board.remove(target);
+        }
+    }
+
+    private boolean verifyCanEatPieces(Coordinate... coordinates){
+        boolean state = false;
+        int row = 2;
+        if(this.turn.getColor().equals(Color.WHITE)) {
+            row = row * -1;
+        }
+        Coordinate origin = coordinates[0];
+        int rowTarget = origin.getRow() + row;
+        int column = 2;
+        for (int i = 0; i < 2; i++ ) {
+            int colTarget = origin.getColumn() + column;
+            if ( rowTarget <= 7 && colTarget >= 0) {
+                coordinates[1] = new Coordinate(rowTarget, colTarget);
+                Coordinate betweenPiece  = this.getBetweenDiagonalPiece(0, coordinates);
+                if (betweenPiece  != null ) {
+                    if(this.turn.getColor() != this.board.getColor(betweenPiece) ) {
+                        state = true;
+                        break;
+                    }
+                }
+            }
+            column = column * -1;
+        }
+        return state;
+    }
 
 	private Error isCorrectPairMove(int pair, Coordinate... coordinates) {
 		assert coordinates[pair] != null;
@@ -60,7 +96,7 @@ public class Game {
 			return Error.OPPOSITE_PIECE;
 		if (!this.board.isEmpty(coordinates[pair + 1]))
 			return Error.NOT_EMPTY_TARGET;
-		List<Piece> betweenDiagonalPieces = 
+		List<Piece> betweenDiagonalPieces =
 			this.board.getBetweenDiagonalPieces(coordinates[pair], coordinates[pair + 1]);
 		return this.board.getPiece(coordinates[pair]).isCorrectMovement(betweenDiagonalPieces, pair, coordinates);
 	}
@@ -125,6 +161,8 @@ public class Game {
 		}
 		return coordinates;
 	}
+
+
 
 	private boolean isBlocked(Coordinate coordinate) {
 		for (int i = 1; i <= 2; i++)
